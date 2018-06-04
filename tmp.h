@@ -38,7 +38,8 @@ private:
     int display_fd;
     char i2c_addr;
     DisplayMode mode = DisplayMode::SCROLL;
-    unsigned char display_buffer[DISPLAY_ROWS][DISPLAY_COLS];
+    unsigned char send_buffer[DISPLAY_ROWS * DISPLAY_COLS + 1];
+    unsigned char *display_buffer = send_buffer + 1;
 
         // ssd1306 command sequences
     unsigned char init_seq[26] = {0x00,0xAE,0xA8,0x3F,
