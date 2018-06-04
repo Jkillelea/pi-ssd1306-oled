@@ -27,7 +27,6 @@ SSD1306::SSD1306(char *path, char addr) {
 }
 
 uint SSD1306::print(const char *const msg) {
-    
     return 0;
 }
 
@@ -38,6 +37,18 @@ void SSD1306::clear() {
 
     D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
     memset(this->display_buffer, 0, sizeof(this->display_buffer)); // zero out display buffer
+
+    D puts("write");
+    write(this->display_fd, send_buffer, sizeof(send_buffer));
+}
+
+void SSD1306::testdraw() {
+    D puts("testdraw");
+    char send_buffer[DISPLAY_ROWS * DISPLAY_COLS] = {0}; // buffer we'll actually send
+    send_buffer[0] = 0x40;
+
+    D printf("memset(this->display_buffer, 0xFF, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
+    memset(this->display_buffer, 0xFF, sizeof(this->display_buffer)); // zero out display buffer
 
     D puts("write");
     write(this->display_fd, send_buffer, sizeof(send_buffer));
