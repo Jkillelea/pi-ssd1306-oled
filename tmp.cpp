@@ -43,10 +43,12 @@ void SSD1306::clear() {
 
 void SSD1306::testdraw() {
     D puts("testdraw");
+    *this->cmd = 0x40;
     for (int i = 0; i < DISPLAY_ROWS; i++) {
-        unsigned char send_buffer[129] = {0};
-        send_buffer[0] = 0x40;
-        write(this->display_fd, send_buffer, sizeof(send_buffer));
+        for (int j = 0; j < DISPLAY_COLS; j++) {
+            this->display_buffer[i*DISPLAY_COLS + j] = 0xFF;
+            write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
+        }
     }
 }
 
