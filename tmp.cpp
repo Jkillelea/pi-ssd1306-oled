@@ -42,7 +42,7 @@ void SSD1306::clear() {
 
 void SSD1306::testdraw() {
     D puts("testdraw");
-    *this->cmd = 0x40;
+    *this->cmd = (1 << 6);
     for (int i = 0; i < DISPLAY_ROWS; i++) {
         D printf("row %d\n", i);
         for (int j = 0; j < DISPLAY_COLS; j++) {
