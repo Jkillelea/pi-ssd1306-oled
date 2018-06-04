@@ -26,7 +26,7 @@ SSD1306::SSD1306(char *path, char addr) {
     write(display_fd, init_seq, sizeof(init_seq));
 }
 
-uint SSD1306::print(const char *const msg) {
+size_t SSD1306::print(const char *const msg) {
     return 0;
 }
 
@@ -37,8 +37,7 @@ void SSD1306::clear() {
     D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
     memset(this->display_buffer, 0, sizeof(this->display_buffer)); // zero out display buffer
 
-    D puts("write");
-    write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
+    send();
 }
 
 void SSD1306::testdraw() {
@@ -49,9 +48,14 @@ void SSD1306::testdraw() {
         for (int j = 0; j < DISPLAY_COLS; j++) {
             D printf("col %d\n", j);
             this->display_buffer[i*DISPLAY_COLS + j] = 0xFF;
-            write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
         }
+        send();
     }
+}
+
+size_t SSD1306::send() {
+    D puts("write");
+    return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
 }
 
 SSD1306::~SSD1306() {

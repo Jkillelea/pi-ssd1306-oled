@@ -29,10 +29,12 @@ public:
 
     void clear_display();
     void testdraw();
-    uint print(const char *const msg);
+    size_t print(const char *const msg);
     void clear();
 
 private:
+    size_t send(); // write out the data
+
     static const uint DISPLAY_ROWS = 8;
     static const uint DISPLAY_COLS = 128;
     int display_fd;
