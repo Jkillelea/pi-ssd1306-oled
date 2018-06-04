@@ -24,7 +24,7 @@ public:
         WRAP
     };
 
-    SSD1306(char path[] = "/dev/i2c-1", char addr = 0x3C);
+    SSD1306(char path[] = (char *)"/dev/i2c-1", char addr = 0x3C);
     ~SSD1306();
 
     void clear_display();
