@@ -5,7 +5,7 @@ int main(int argc, char const *argv[]) {
 
     display.clear();
     display.testdraw();
-    display.clear();
+    // display.clear();
 
     return 0;
 }
