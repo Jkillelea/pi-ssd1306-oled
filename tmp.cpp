@@ -15,6 +15,13 @@ SSD1306::SSD1306(char *path, char addr) {
             perror("ioctl(2)");
             exit(EXIT_FAILURE);
     }
+
+    D puts("memset display_buffer");
+    memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS*DISPLAY_COLS));    
+
+    D printf("sizeof(init_seq) = %lu\n", sizeof(init_seq));
+    write(display_fd, init_seq, sizeof(init_seq));
+    
 }
 
 SSD1306::~SSD1306() {
