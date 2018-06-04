@@ -32,14 +32,13 @@ uint SSD1306::print(const char *const msg) {
 
 void SSD1306::clear() {
     D puts("clear");
-   char send_buffer[DISPLAY_ROWS * DISPLAY_COLS] = {0}; // buffer we'll actually send
-   send_buffer[0] = 0x40;
+    *this->cmd = 0x40;
 
     D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
     memset(this->display_buffer, 0, sizeof(this->display_buffer)); // zero out display buffer
 
     D puts("write");
-    write(this->display_fd, send_buffer, sizeof(send_buffer));
+    write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
 }
 
 void SSD1306::testdraw() {
