@@ -29,6 +29,7 @@ public:
 
     void clear_display();
     uint print(const char *const msg);
+    void clear();
 
 private:
     static const uint DISPLAY_ROWS = 8;
