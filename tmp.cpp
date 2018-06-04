@@ -42,26 +42,20 @@ void SSD1306::clear() {
 
 void SSD1306::testdraw() {
     D puts("testdraw");
-    *this->cmd = (1 << 6);
+    *this->cmd = (1 << 6); // data only
     for (int i = 0; i < DISPLAY_ROWS; i++) {
         D printf("row %d\n", i);
         for (int j = 0; j < DISPLAY_COLS; j++) {
             // D printf("col %d\n", j);
             this->display_buffer[i*DISPLAY_COLS + j] = 0xFF;
         }
-        send();
     }
+    send();
 }
 
 size_t SSD1306::send() {
     D puts("write");
     return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer)); // [cmd, data]
-    // size_t first_result;
-    // if ((first_result = write(this->display_fd, this->cmd, sizeof(char))) > 0) { // cmd
-    //     return write(this->display_fd, this->display_buffer, sizeof(this->display_buffer)); // data
-    // } else {
-    //     return first_result;
-    // }
 }
 
 SSD1306::~SSD1306() {
