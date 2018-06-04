@@ -28,6 +28,7 @@ public:
     ~SSD1306();
 
     void clear_display();
+    uint print(const char *const msg);
 
 private:
     static const uint DISPLAY_ROWS = 8;
