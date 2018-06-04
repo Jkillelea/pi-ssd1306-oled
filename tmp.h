@@ -35,7 +35,7 @@ public:
 private:
     size_t send(); // write out the data
 
-    static const uint DISPLAY_ROWS = 64;
+    static const uint DISPLAY_ROWS = 8;
     static const uint DISPLAY_COLS = 128;
     int display_fd;
     char i2c_addr;

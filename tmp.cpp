@@ -55,7 +55,12 @@ void SSD1306::testdraw() {
 
 size_t SSD1306::send() {
     D puts("write");
-    return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
+    size_t first_result;
+    if ((first_result = write(this->display_fd, this->cmd, sizeof(char))) > 0) { // cmd
+        return write(this->display_fd, this->display_buffer, sizeof(this->display_buffer)); // data
+    } else {
+        return first_result;
+    }
 }
 
 SSD1306::~SSD1306() {
