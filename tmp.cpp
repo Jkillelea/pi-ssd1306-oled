@@ -49,8 +49,8 @@ void SSD1306::testdraw() {
         for (int j = 0; j < DISPLAY_COLS; j++) {
             D printf("col %d\n", j);
             this->display_buffer[i*DISPLAY_COLS + j] = 0xFF;
-            send();
         }
+        send();
     }
 }
 
