@@ -47,9 +47,6 @@ void SSD1306::testdraw() {
     for (int i = 0; i < DISPLAY_ROWS; i++) {
         unsigned char send_buffer[129] = {0};
         send_buffer[0] = 0x40;
-        for(int j = i; j < 129; j += 2) {
-            send_buffer[j] = 0xFF;
-        }
         write(this->display_fd, send_buffer, sizeof(send_buffer));
     }
 }
