@@ -40,8 +40,12 @@ private:
     int display_fd;
     char i2c_addr;
     DisplayMode mode = DisplayMode::SCROLL;
+    /* send_buffer holds all the data
+     * cmd is a pointer to the first element
+     * display_buffer is a pointer to the second (and all the elements thereafter)
+     */
     unsigned char send_buffer[DISPLAY_ROWS * DISPLAY_COLS + 1] = {0};
-    unsigned char *cmd = send_buffer; // first byte is command
+    unsigned char *cmd = send_buffer;                // first byte is command
     unsigned char *display_buffer = send_buffer + 1; // remaining is screen data
 
     // ssd1306 command sequences
