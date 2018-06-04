@@ -34,7 +34,7 @@ uint SSD1306::print(const char *const msg) {
 
 void SSD1306::clear() {
     D puts("clear");
-   char send_buffer[129] = {0}; // buffer we'll actually send
+   char send_buffer[DISPLAY_ROWS * DISPLAY_COLS] = {0}; // buffer we'll actually send
    send_buffer[0] = 0x40;
 
     D puts("memset(this->display_buffer, 0, sizeof(this->display_buffer))");
