@@ -20,15 +20,14 @@ SSD1306::SSD1306(char *path, char addr) {
     D puts("ioctl ok");    
 
     D puts("memset display_buffer");
-    memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS*DISPLAY_COLS));    
+    memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS * DISPLAY_COLS));    
 
-    D printf("sizeof(init_seq) = %lu\n", sizeof(init_seq));
+    D printf("write(display_fd, init_seq, sizeof(init_seq)), sizeof(init_seq) = %lu\n", sizeof(init_seq));
     write(display_fd, init_seq, sizeof(init_seq));
-    
 }
 
 uint SSD1306::print(const char *const msg) {
-
+    
     return 0;
 }
 
@@ -37,8 +36,7 @@ void SSD1306::clear() {
    char send_buffer[DISPLAY_ROWS * DISPLAY_COLS] = {0}; // buffer we'll actually send
    send_buffer[0] = 0x40;
 
-    D puts("memset(this->display_buffer, 0, sizeof(this->display_buffer))");
-    D printf("sizeof(this->display_buffer) = %d", sizeof(this->display_buffer));
+    D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
     memset(this->display_buffer, 0, sizeof(this->display_buffer)); // zero out display buffer
 
     D puts("write");
