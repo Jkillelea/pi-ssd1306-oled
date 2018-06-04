@@ -32,8 +32,7 @@ size_t SSD1306::print(const char *const msg) {
 
 void SSD1306::clear() {
     D puts("clear");
-    // *(this->cmd) = (1 << 6); // data only
-    *(this->cmd) = 0x00; // data only
+    *(this->cmd) = (1 << 6); // data only
 
     D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), "
              "sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
@@ -43,7 +42,7 @@ void SSD1306::clear() {
 
 void SSD1306::testdraw() {
     D puts("testdraw");
-    *this->cmd = 0x00;
+    *this->cmd = 0x40;
     for (int i = 0; i < DISPLAY_ROWS; i++) {
         D printf("row %d\n", i);
         for (int j = 0; j < DISPLAY_COLS; j++) {
