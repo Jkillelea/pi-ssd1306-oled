@@ -45,7 +45,9 @@ void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = 0x40;
     for (int i = 0; i < DISPLAY_ROWS; i++) {
+        D printf("row %d\n", i);
         for (int j = 0; j < DISPLAY_COLS; j++) {
+            D printf("col %d\n", j);
             this->display_buffer[i*DISPLAY_COLS + j] = 0xFF;
             write(this->display_fd, this->send_buffer, sizeof(this->send_buffer));
         }
