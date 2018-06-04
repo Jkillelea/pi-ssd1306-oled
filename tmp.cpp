@@ -44,17 +44,12 @@ void SSD1306::clear() {
 
 void SSD1306::testdraw() {
     D puts("testdraw");
-    char send_buffer[DISPLAY_ROWS * DISPLAY_COLS] = {0}; // buffer we'll actually send
-    send_buffer[0] = 0x40;
-
-    D printf("memset(this->display_buffer, 0xFF, sizeof(this->display_buffer)), sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
-    memset(this->display_buffer, 0xFF, sizeof(this->display_buffer)); // zero out display buffer
-
-    D printf("memcpy(send_buffer, this->display_buffer, sizeof(this->display_buffer));, sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
-    memcpy(send_buffer, this->display_buffer, sizeof(this->display_buffer));
-
-    D puts("write");
-    write(this->display_fd, send_buffer, sizeof(send_buffer));
+    for (int i = 0; i < DISPLAY_ROWS; i++) {
+        unsigned char send_buffer[129] = {0};
+        memset(send_buffer, 0xFF, sizeof(send_buffer));
+        send_buffer[0] = 0x40;
+        write(this->display_fd, send_buffer, sizeof(send_buffer));
+    }
 }
 
 SSD1306::~SSD1306() {
