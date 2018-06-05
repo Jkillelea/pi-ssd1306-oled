@@ -33,7 +33,7 @@ size_t SSD1306::print(const char *const msg) {
 void SSD1306::clear() {
     D puts("clear");
     *(this->cmd) = (1 << 6); // data only
-    D printf("memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS)");
+    D puts("memset(this->display_buffer, 0, DISPLAY_ROWS * DISPLAY_COLS)");
     memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS); // zero out display buffer
     send();
 }
@@ -56,7 +56,12 @@ void SSD1306::testdraw() {
 
 size_t SSD1306::send() {
     D puts("write");
-    return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer)); // [cmd, data]
+    size_t nbytes_written;
+    // return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer)); // [cmd, data]
+    if((nbytes_written = write(this->display_fd, this->send_buffer, sizeof(this->send_buffer))) <0) {
+        perror("write(2) failed:");
+        exit(EXIT_FAILURE);
+    }
 }
 
 SSD1306::~SSD1306() {
