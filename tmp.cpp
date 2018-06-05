@@ -62,6 +62,7 @@ size_t SSD1306::send() {
         perror("write(2) failed:");
         exit(EXIT_FAILURE);
     }
+    return nbytes_written;
 }
 
 SSD1306::~SSD1306() {
