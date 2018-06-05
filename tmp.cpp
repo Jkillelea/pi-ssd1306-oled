@@ -49,8 +49,8 @@ void SSD1306::testdraw(char val) {
             // D printf("col %d\n", j);
             this->display_buffer[i*DISPLAY_COLS + j] = val;
         }
+        send();
     }
-    send();
 }
 
 size_t SSD1306::send() {
