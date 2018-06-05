@@ -27,7 +27,7 @@ public:
     SSD1306(char path[] = (char *)"/dev/i2c-1", char addr = 0x3C);
     ~SSD1306();
 
-    void testdraw(char val);
+    void testdraw();
     void clear_display();
     size_t print(const char *const msg);
     void clear();

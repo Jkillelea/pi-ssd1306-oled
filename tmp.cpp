@@ -40,17 +40,18 @@ void SSD1306::clear() {
     send();
 }
 
-void SSD1306::testdraw(char val) {
+void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = (1 << 6); // data only
-    for (int i = 0; i < DISPLAY_ROWS; i++) {
-        D printf("row %d\n", i);
-        for (int j = 0; j < DISPLAY_COLS; j++) {
-            // D printf("col %d\n", j);
-            this->display_buffer[i*DISPLAY_COLS + j] = val;
-        }
-        send();
-    }
+    // for (int i = 0; i < DISPLAY_ROWS; i++) {
+    //     D printf("row %d\n", i);
+    //     for (int j = 0; j < DISPLAY_COLS; j++) {
+    //         // D printf("col %d\n", j);
+    //         this->display_buffer[i*DISPLAY_COLS + j] = {4, 0x7E, 0x12, 0x12, 0x7e};
+    //     }
+    char data[] = {4, 0x7E, 0x12, 0x12, 0x7e};
+    memcpy(this->display_buffer, data, sizeof(data));
+    send();
 }
 
 size_t SSD1306::send() {
