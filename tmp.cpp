@@ -33,10 +33,8 @@ size_t SSD1306::print(const char *const msg) {
 void SSD1306::clear() {
     D puts("clear");
     *(this->cmd) = (1 << 6); // data only
-
-    D printf("memset(this->display_buffer, 0, sizeof(this->display_buffer)), "
-             "sizeof(this->display_buffer) = %d\n", sizeof(this->display_buffer));
-    memset(this->display_buffer, 0, sizeof(this->display_buffer)); // zero out display buffer
+    D printf("memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS)");
+    memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS); // zero out display buffer
     send();
 }
 
