@@ -54,6 +54,21 @@ void SSD1306::testdraw() {
     }
 }
 
+void SSD1306::every_pixel() {
+    D puts("testdraw");
+    *this->cmd = (1 << 6); // data only
+    for (int i = 0; i < DISPLAY_ROWS; i++) {
+        D printf("row %d\n", i);
+        for (int j = 0; j < DISPLAY_COLS; j++) {
+            for (int k = 0; k < 8; k++) {
+                this->display_buffer[i*DISPLAY_COLS + j] |= (1 << k);
+                send();
+            }
+        }
+    }
+}
+
+
 size_t SSD1306::send() {
     D puts("write");
     size_t nbytes_written;

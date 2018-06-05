@@ -28,6 +28,7 @@ public:
     ~SSD1306();
 
     void testdraw();
+    void every_pixel();
     void clear_display();
     size_t print(const char *const msg);
     void clear();
