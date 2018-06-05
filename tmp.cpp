@@ -45,11 +45,18 @@ void SSD1306::testdraw() {
     *this->cmd = (1 << 6); // data only
     for (int i = 0; i < DISPLAY_ROWS; i++) {
         D printf("row %d\n", i);
-        for (int j = 0; j < DISPLAY_COLS; j++) {
-            for (int k = 0; k < 8; k++) { // manually set every bit to 1 one by one...
-                this->display_buffer[i*DISPLAY_COLS + j] |= (1 << k);
-                send();
-            }
+        // for (int j = 0; j < DISPLAY_COLS; j++) {
+        //     for (int k = 0; k < 8; k++) { // manually set every bit to 1 one by one...
+        //         this->display_buffer[i*DISPLAY_COLS + j] |= (1 << k);
+        //         send();
+        //     }
+        // }
+        char A[] = { 4, 0x7E, 0x12, 0x12, 0x7e };
+        int numelems = DISPLAY_COLS / sizeof(A);
+        unsigned char *row_ptr = &this->display_buffer[i * DISPLAY_COLS];
+        for (int j = 0; j < numelems; j++) {
+            memcpy(row_ptr, A, sizeof(A));
+            row_ptr += sizeof(A);
         }
     }
 }
