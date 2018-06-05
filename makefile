@@ -1,6 +1,6 @@
 CC = g++
-CFLAGS = -std=c++11 -O3 -D DEBUG
-CFLAGS += -O3
+CFLAGS = -std=c++11
+# CFLAGS += -O3
 # CFLAGS += -D DEBUG
 BUILD_DIR = ./build
 EXECS = oled display-a tmptest 
