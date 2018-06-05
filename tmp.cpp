@@ -22,7 +22,8 @@ SSD1306::SSD1306(char *path, char addr) {
     D puts("memset display_buffer");
     memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS * DISPLAY_COLS));    
 
-    D printf("write(display_fd, init_seq, sizeof(init_seq)), sizeof(init_seq) = %lu\n", sizeof(init_seq));
+    D printf("write(display_fd, init_seq, sizeof(init_seq)), "
+             "sizeof(init_seq) = %lu\n", sizeof(init_seq));
     write(display_fd, init_seq, sizeof(init_seq));
 }
 
@@ -73,8 +74,9 @@ void SSD1306::every_pixel() {
 size_t SSD1306::send() {
     D puts("write");
     size_t nbytes_written;
-    // return write(this->display_fd, this->send_buffer, sizeof(this->send_buffer)); // [cmd, data]
-    if((nbytes_written = write(this->display_fd, this->send_buffer, sizeof(this->send_buffer))) <0) {
+    if((nbytes_written = write(this->display_fd, 
+                               this->send_buffer, 
+                               sizeof(this->send_buffer))) < 0) {
         perror("write(2) failed:");
         exit(EXIT_FAILURE);
     }
