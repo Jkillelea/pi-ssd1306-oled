@@ -51,8 +51,8 @@ void SSD1306::testdraw() {
         for (int j = 0; j < numelems; j++) {
             memcpy(row_ptr, A, sizeof(A));
             row_ptr += sizeof(A);
+            send();
         }
-        send();
     }
 }
 
