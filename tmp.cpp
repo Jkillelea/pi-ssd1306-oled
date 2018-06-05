@@ -1,3 +1,4 @@
+// tmp.cpp - An interface for the SSD1306 display driver chip
 #include "tmp.h"
 
 SSD1306::SSD1306(char *path, char addr) {
@@ -24,7 +25,7 @@ SSD1306::SSD1306(char *path, char addr) {
 
     D printf("write(display_fd, init_seq, sizeof(init_seq)), "
              "sizeof(init_seq) = %lu\n", sizeof(init_seq));
-    write(display_fd, init_seq, sizeof(init_seq));
+    write(this->display_fd, init_seq, sizeof(init_seq));
 }
 
 size_t SSD1306::print(const char *const msg) {
