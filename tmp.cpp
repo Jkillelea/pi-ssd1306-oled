@@ -1,6 +1,8 @@
 // tmp.cpp - An interface for the SSD1306 display driver chip
 #include "tmp.h"
 
+/* Init object, open file, zero out data buffer
+ */
 SSD1306::SSD1306(char *path, char addr) {
     D puts("SSD1306::SSD1306");
     this->i2c_addr = addr;
@@ -61,7 +63,7 @@ void SSD1306::testdraw() {
         uint8_t *data_ptr = &this->display_buffer[row*DISPLAY_COLS];
         data_ptr += offset;
         memcpy(data_ptr, A, sizeof(A));
-        offset += sizeof(A);
+        offset += 2*sizeof(A);
         send();
     }
 }
