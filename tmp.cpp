@@ -47,7 +47,7 @@ void SSD1306::testdraw() {
         D printf("row %d\n", i);
         char A[] = { 4, 0x7E, 0x12, 0x12, 0x7e }; // character to print
         int numelems = DISPLAY_COLS / sizeof(A); // how many times
-        unsigned char *row_ptr = &this->display_buffer[i * DISPLAY_COLS]; // get pointer to right location
+        uint8_t *row_ptr = &this->display_buffer[i * DISPLAY_COLS]; // get pointer to right location
         for (int j = 0; j < numelems; j++) {
             memcpy(row_ptr, A, sizeof(A));
             row_ptr += sizeof(A);
