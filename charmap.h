@@ -1,3 +1,4 @@
+#define BITMAP_SIZE 6
 char charmap[][6] = {
 	{0x00,0x00}, // SPACE
 	{0x5E}, // !

@@ -30,11 +30,16 @@ public:
 
     void testdraw();
     void every_pixel();
-    void clear_display();
+#ifdef putc
+#undef putc
+#endif
+    size_t putc(char ch);
     size_t print(const char *const msg);
     void clear();
 
 private:
+    uint32_t cursor_pos = 0; // offset of next character
+
     size_t send(); // write out the data
 
     static const uint32_t DISPLAY_ROWS = 8;
