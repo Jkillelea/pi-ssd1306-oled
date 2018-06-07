@@ -45,7 +45,7 @@ size_t SSD1306::putc(char ch) {
         this->cursor_row++;
     }
 
-    printf("row %d, col %d\n" this->cursor_row, this->cursor_col);
+    printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
 
     size_t offset = (this->cursor_row * DISPLAY_COLS) 
                     + (this->cursor_col * BITMAP_SIZE);
