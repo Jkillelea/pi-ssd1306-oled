@@ -65,8 +65,8 @@ void SSD1306::testdraw() {
         data_ptr += offset;
         memcpy(data_ptr, C, sizeof(C));
         offset += 2*sizeof(C);
-        send();
     }
+    send();
 }
 
 void SSD1306::every_pixel() {
