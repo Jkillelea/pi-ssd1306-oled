@@ -51,7 +51,7 @@ void SSD1306::testdraw() {
     size_t charsize = 6*sizeof(char); // bytes
     for(char c = ' '; c <= '`'; c++) {
         clear();
-        char *data = fontData[c - ' '];
+        char *data = charmap[c - ' '];
         memcpy(this->display_buffer, data, charsize);
         send();
         send();
