@@ -40,6 +40,7 @@ void SSD1306::clear() {
     D puts("memset(this->display_buffer, 0, DISPLAY_ROWS * DISPLAY_COLS)");
     memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS); // zero out display buffer
     send();
+    send();
 }
 
 void SSD1306::testdraw() {
