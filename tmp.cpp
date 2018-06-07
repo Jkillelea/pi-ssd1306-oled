@@ -46,7 +46,8 @@ void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = (1 << 6); // data only
     
-    uint8_t A[] = { 4, 0x7E, 0x12, 0x12, 0x7e }; // character to print
+    uint8_t A[] = { 0x7E, 0x12, 0x12, 0x7e }; // character to print
+    // uint8_t A[] = { 4, 0x7E, 0x12, 0x12, 0x7e }; // character to print
 
     // for (int i = 0; i < DISPLAY_ROWS; i++) {
     //     D printf("row %d\n", i);
