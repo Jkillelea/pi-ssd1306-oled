@@ -2,6 +2,7 @@
 #include "tmp.h"
 #include "charmap.h"
 
+
 /* Init object, open file, zero out data buffer */
 SSD1306::SSD1306(char *path, char addr) {
     D puts("SSD1306::SSD1306");
@@ -32,19 +33,12 @@ SSD1306::SSD1306(char *path, char addr) {
 
 size_t SSD1306::print(char *msg) { // null terminated string
     D puts("print");
+    D printf("%s\n", *msg);
     char *data = msg; // copy the ptr
+
     while (*data) {
-
-        switch (*data) {
-            case '\n':
-                newline();
-                continue;
-            case '\t':
-                this->cursor_col += 2;
-                continue;
-        }
-
-        D printf("%c\n", *data);
+        if(handle_ctrl_char(*data))
+            continue;
         char *bitmap = charmap[*data - ' ']; // get bitmap
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
@@ -135,6 +129,18 @@ size_t SSD1306::send() {
         exit(EXIT_FAILURE);
     }
     return nbytes_written;
+}
+
+bool SSD1306::handle_ctrl_char(char ch) {
+    switch (ch) {
+        case '\n':
+            newline();
+            return true;
+        case '\t':
+            this->cursor_col += 2;
+            return true;
+    }
+    return false;
 }
 
 SSD1306::~SSD1306() {

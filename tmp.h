@@ -43,6 +43,7 @@ private:
     uint32_t cursor_col = 0;
 
     size_t send(); // write out the data
+    bool handle_ctrl_char(char ch); // write out the data
 
     static const uint32_t DISPLAY_ROWS = 8;
     static const uint32_t DISPLAY_COLS = 128;
