@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -std=c++11
 CFLAGS += -O3
-# CFLAGS += -D DEBUG
+CFLAGS += -D DEBUG
 BUILD_DIR = ./build
 EXECS = oled tmptest clear
 
