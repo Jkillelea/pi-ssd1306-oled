@@ -33,7 +33,7 @@ SSD1306::SSD1306(char *path, char addr) {
 
 size_t SSD1306::print(char *msg) { // null terminated string
     D puts("print");
-    D printf("%s\n", *msg);
+    D printf("%s\n", msg);
     char *data = msg; // copy the ptr
 
     while (*data) {
