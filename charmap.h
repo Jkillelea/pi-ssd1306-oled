@@ -1,4 +1,4 @@
-int fontData[][6] = {
+char fontData[][6] = {
 	{2,0x00,0x00}, // SPACE
 	{1,0x5E}, // !
 	{3,0x02,0x00,0x02}, // "

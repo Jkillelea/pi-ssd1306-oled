@@ -48,10 +48,10 @@ void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = (1 << 6); // data only
 
-    size_t charsize = 6*sizeof(int); // bytes
+    size_t charsize = 6*sizeof(char); // bytes
     size_t offset = 0;
     for(char c = 'A'; c < 'Z'; c++) {
-        int *data = fontData[c - ' '];
+        char *data = fontData[c - ' '];
         memcpy(&this->display_buffer[offset], data, charsize);
         offset += charsize;
     }
