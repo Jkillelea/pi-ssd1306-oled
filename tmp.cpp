@@ -39,16 +39,24 @@ size_t SSD1306::print(const char *const msg) {
 size_t SSD1306::putc(char ch) {
     char *bitmap = charmap[ch - ' '];
     size_t bitmap_size = BITMAP_SIZE;
-    size_t offset = this->cursor_pos * BITMAP_SIZE;
+    
+    if (DISPLAY_COLS - this->cursor_col < BITMAP_SIZE) {
+        this->cursor_col = 0;
+        this->cursor_row++;
+    }
+    size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                    + (this->cursor_col * BITMAP_SIZE);
+
     memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
-    this->cursor_pos++;
+    this->cursor_col++;
 
     return send();
 }
 
 void SSD1306::clear() {
     D puts("clear");
-    this->cursor_pos = 0;
+    this->cursor_col = 0;
+    this->cursor_row = 0;
 
     *(this->cmd) = (1 << 6); // data only
     D puts("memset(this->display_buffer, 0, DISPLAY_ROWS * DISPLAY_COLS)");

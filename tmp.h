@@ -38,7 +38,8 @@ public:
     void clear();
 
 private:
-    uint32_t cursor_pos = 0; // offset of next character
+    uint32_t cursor_row = 0;
+    uint32_t cursor_col = 0;
 
     size_t send(); // write out the data
 
