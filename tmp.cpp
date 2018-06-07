@@ -54,8 +54,6 @@ void SSD1306::testdraw() {
         char *data = charmap[c - ' '];
         memcpy(this->display_buffer, data, charsize);
         send();
-        send();
-        send();
     }
     
 }
