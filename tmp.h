@@ -35,7 +35,7 @@ public:
 #endif
     void newline();
     size_t putc(char ch);
-    size_t print(const char *const msg);
+    size_t print(char *msg);
     void clear();
 
 private:

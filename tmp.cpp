@@ -2,9 +2,7 @@
 #include "tmp.h"
 #include "charmap.h"
 
-
-/* Init object, open file, zero out data buffer
- */
+/* Init object, open file, zero out data buffer */
 SSD1306::SSD1306(char *path, char addr) {
     D puts("SSD1306::SSD1306");
     this->i2c_addr = addr;
@@ -32,8 +30,23 @@ SSD1306::SSD1306(char *path, char addr) {
     write(this->display_fd, init_seq, sizeof(init_seq));
 }
 
-size_t SSD1306::print(const char *const msg) {
-    return 0;
+size_t SSD1306::print(char *msg) { // null terminated string
+    D puts("print");
+    char *data = msg; // copy the ptr
+    while (*data) {
+        char *bitmap = charmap[*data - ' ']; // get bitmap
+        // see if there's enough space on this line for character
+        if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
+            newline(); // if not, newline
+        }
+        // use row and col to get buffer offset
+        size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                        + (this->cursor_col * BITMAP_SIZE);
+        memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+        this->cursor_col++; // increment cursor
+        data++;             // increment ptr
+    }
+    return send();
 }
 
 void SSD1306::newline() {
@@ -44,14 +57,11 @@ void SSD1306::newline() {
 size_t SSD1306::putc(char ch) {
     D puts("putc");
     char *bitmap = charmap[ch - ' ']; // get bitmap
-    
     // see if there's enough space on this line for character
     if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
         newline(); // if not, newline
     }
-
     D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
-
     // use row and col to get buffer offset
     size_t offset = (this->cursor_row * DISPLAY_COLS) 
                     + (this->cursor_col * BITMAP_SIZE);
