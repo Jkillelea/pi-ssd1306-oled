@@ -36,17 +36,23 @@ size_t SSD1306::print(const char *const msg) {
     return 0;
 }
 
+void SSD1306::newline() {
+    this->cursor_col = 0;
+    this->cursor_row++;
+}
+
 size_t SSD1306::putc(char ch) {
-    char *bitmap = charmap[ch - ' '];
-    size_t bitmap_size = BITMAP_SIZE;
+    D puts("putc");
+    char *bitmap = charmap[ch - ' ']; // get bitmap
     
+    // see if there's enough space on this line for character
     if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
-        this->cursor_col = 0;
-        this->cursor_row++;
+        newline(); // if not, newline
     }
 
-    printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
+    D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
 
+    // use row and col to get buffer offset
     size_t offset = (this->cursor_row * DISPLAY_COLS) 
                     + (this->cursor_col * BITMAP_SIZE);
 
