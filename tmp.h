@@ -30,9 +30,10 @@ public:
 
     void testdraw();
     void every_pixel();
-#ifdef putc
+#ifdef putc // putc is defined in stdio.h as a macro
 #undef putc
 #endif
+    void newline();
     size_t putc(char ch);
     size_t print(const char *const msg);
     void clear();
