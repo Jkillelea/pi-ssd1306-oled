@@ -118,15 +118,15 @@
         if(letterIdx > 64)
             letterIdx = 65;
 
-        int letterBytes = chamap[letterIdx][0];
+        int letterBytes = charmap[letterIdx][0];
 
         if((curr + letterBytes + 1) > 127 ) {
             return 0;
             D printf("\n");
         } else {
             for(int i = 0; i < letterBytes; i++) {
-                D printf("%x ", chamap[letterIdx][1 + i]);
-                displayLines[currentLine][curr + i] = chamap[letterIdx][1 + i]; 
+                D printf("%x ", charmap[letterIdx][1 + i]);
+                displayLines[currentLine][curr + i] = charmap[letterIdx][1 + i]; 
             }
 
             displayLines[currentLine][curr + letterBytes++] = 0x00;  // single byte space / seperator
