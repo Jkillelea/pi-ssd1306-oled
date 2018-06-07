@@ -10,12 +10,12 @@ int main(int argc, char const *argv[]) {
     // }
     // display.testdraw();
     // display.every_pixel();
-    display.putc('p');
-    display.putc('o');
-    display.putc('t');
-    display.putc('a');
-    display.putc('t');
-    display.putc('o');
+    display.putc('P');
+    display.putc('O');
+    display.putc('T');
+    display.putc('A');
+    display.putc('T');
+    display.putc('O');
     display.putc('!');
 
     return 0;
