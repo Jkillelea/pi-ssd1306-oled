@@ -35,16 +35,16 @@ size_t SSD1306::print(char *msg) { // null terminated string
     char *data = msg; // copy the ptr
     while (*data) {
         printf("%s\n", data);
-        // char *bitmap = charmap[*data - ' ']; // get bitmap
-        // // see if there's enough space on this line for character
-        // if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
-        //     newline(); // if not, newline
-        // }
-        // // use row and col to get buffer offset
-        // size_t offset = (this->cursor_row * DISPLAY_COLS) 
-        //                 + (this->cursor_col * BITMAP_SIZE);
-        // memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
-        // this->cursor_col++; // increment cursor
+        char *bitmap = charmap[*data - ' ']; // get bitmap
+        // see if there's enough space on this line for character
+        if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
+            newline(); // if not, newline
+        }
+        // use row and col to get buffer offset
+        size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                        + (this->cursor_col * BITMAP_SIZE);
+        memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+        this->cursor_col++; // increment cursor
         data++;             // increment ptr
     }
     return send();
