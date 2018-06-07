@@ -4,14 +4,10 @@ int main(int argc, char const *argv[]) {
     SSD1306 display = SSD1306();
 
     display.clear();
-    display.print((char *)"POT\tATO\n!");
-    // for (char ch = ' '; ch <= '`'; ch++) {
-    //     display.putc(ch);
-    // }
-    // display.testdraw();
-    // display.every_pixel();
-    display.putc('P');
-    display.putc('!');
+    display.print((char *)"P\tO\tT\tA\tT\tO\t!\n");
+    for (char ch = ' '; ch <= '`'; ch++) {
+        display.putc(ch);
+    }
 
     return 0;
 }
