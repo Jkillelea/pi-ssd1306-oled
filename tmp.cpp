@@ -141,6 +141,9 @@ bool SSD1306::handle_ctrl_char(char ch) {
         case '\t':
             this->cursor_col += 2;
             return true;
+        case '\r':
+            this->cursor_col = 0;
+            return true;
     }
     return false;
 }
