@@ -40,9 +40,8 @@ size_t SSD1306::putc(char ch) {
     char *bitmap = charmap[ch - ' '];
     size_t bitmap_size = BITMAP_SIZE;
     size_t offset = this->cursor_pos * BITMAP_SIZE;
-    this->cursor_pos += BITMAP_SIZE;
-
     memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+    this->cursor_pos++;
 
     return send();
 }
