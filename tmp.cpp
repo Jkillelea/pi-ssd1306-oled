@@ -46,8 +46,8 @@ void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = (1 << 6); // data only
     
-    uint8_t A[] = { 0x7E, 0x12, 0x12, 0x7e }; // character to print
-    // uint8_t A[] = { 4, 0x7E, 0x12, 0x12, 0x7e }; // character to print
+	uint8_t C[] = {4,0x7e,0x42,0x42,0x42}; //C
+    // uint8_t A[] = { 0x7E, 0x12, 0x12, 0x7e }; // character to print
 
     // for (int i = 0; i < DISPLAY_ROWS; i++) {
     //     D printf("row %d\n", i);
@@ -63,8 +63,8 @@ void SSD1306::testdraw() {
     for (int row = 0; row < DISPLAY_ROWS; row++) {
         uint8_t *data_ptr = &this->display_buffer[row*DISPLAY_COLS];
         data_ptr += offset;
-        memcpy(data_ptr, A, sizeof(A));
-        offset += 2*sizeof(A);
+        memcpy(data_ptr, C, sizeof(C));
+        offset += 2*sizeof(C);
         send();
     }
 }
