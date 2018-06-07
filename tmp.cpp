@@ -54,9 +54,12 @@ void SSD1306::testdraw() {
         char *data = fontData[c - ' '];
         memcpy(&this->display_buffer[offset], data, charsize);
         offset += charsize;
+        send();
+        send();
+        send();
+        clear();
     }
     
-    send();
 }
 
 void SSD1306::every_pixel() {
