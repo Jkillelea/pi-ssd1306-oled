@@ -7,7 +7,7 @@ int main(int argc, char const *argv[]) {
     for (char ch = ' '; ch <= 'Z'; ch++) {
         display.putc(ch);
     }
-    display.testdraw();
+    // display.testdraw();
     // display.every_pixel();
 
     return 0;
