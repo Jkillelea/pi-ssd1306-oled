@@ -46,27 +46,18 @@ void SSD1306::testdraw() {
     D puts("testdraw");
     *this->cmd = (1 << 6); // data only
     
-	uint8_t C[] = {0x7e,0x42,0x42,0x42}; //C
-    // uint8_t A[] = { 0x7E, 0x12, 0x12, 0x7e }; // character to print
+    memset(this->display_buffer, 0xFF, (size_t)(DISPLAY_ROWS*DISPLAY_COLS));
 
-    // for (int i = 0; i < DISPLAY_ROWS; i++) {
-    //     D printf("row %d\n", i);
-    //     int numelems = DISPLAY_COLS / sizeof(A); // how many times
-    //     uint8_t *row_ptr = &this->display_buffer[i * DISPLAY_COLS]; // get pointer to right location
-    //     for (int j = 0; j < numelems; j++) {
-    //         memcpy(row_ptr, A, sizeof(A));
-    //         row_ptr += sizeof(A);
-    //     }
-    //     send();
+	// uint8_t C[] = {0x7e,0x42,0x42,0x42}; //C
+    // uint8_t A[] = { 0x7E, 0x12, 0x12, 0x7e }; // character to print
+    // uint offset = 0;
+    // for (int row = 0; row < DISPLAY_ROWS; row++) {
+    //     uint8_t *data_ptr = &this->display_buffer[row*DISPLAY_COLS];
+    //     data_ptr += offset;
+    //     memcpy(data_ptr, C, sizeof(C));
+    //     offset += 2*sizeof(C);
     // }
-    uint offset = 0;
-    for (int row = 0; row < DISPLAY_ROWS; row++) {
-        uint8_t *data_ptr = &this->display_buffer[row*DISPLAY_COLS];
-        data_ptr += offset;
-        memcpy(data_ptr, C, sizeof(C));
-        offset += 2*sizeof(C);
-    }
-    send();
+    // send();
 }
 
 void SSD1306::every_pixel() {
