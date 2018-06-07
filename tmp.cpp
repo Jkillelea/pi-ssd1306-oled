@@ -40,7 +40,7 @@ size_t SSD1306::putc(char ch) {
     char *bitmap = charmap[ch - ' '];
     size_t bitmap_size = BITMAP_SIZE;
     
-    if ((DISPLAY_COLS - this->cursor_col) < BITMAP_SIZE) {
+    if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
         this->cursor_col = 0;
         this->cursor_row++;
     }
