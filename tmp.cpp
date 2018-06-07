@@ -34,6 +34,16 @@ size_t SSD1306::print(char *msg) { // null terminated string
     D puts("print");
     char *data = msg; // copy the ptr
     while (*data) {
+
+        switch (*data) {
+            case '\n':
+                newline();
+                continue;
+            case '\t':
+                this->cursor_col += 2;
+                continue;
+        }
+
         D printf("%c\n", *data);
         char *bitmap = charmap[*data - ' ']; // get bitmap
         // see if there's enough space on this line for character
