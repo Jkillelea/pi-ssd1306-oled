@@ -34,7 +34,7 @@ size_t SSD1306::print(char *msg) { // null terminated string
     D puts("print");
     char *data = msg; // copy the ptr
     while (*data) {
-        printf("%s\n", data);
+        D printf("%c\n", *data);
         char *bitmap = charmap[*data - ' ']; // get bitmap
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
@@ -51,6 +51,7 @@ size_t SSD1306::print(char *msg) { // null terminated string
 }
 
 void SSD1306::newline() {
+    D puts("newline");
     this->cursor_col = 0;
     this->cursor_row++;
 }
