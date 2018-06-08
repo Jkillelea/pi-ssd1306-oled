@@ -1,6 +1,4 @@
 .vscode
 build
-oled
-display-a
-tmptest
+test
 clear
