@@ -40,16 +40,15 @@ size_t SSD1306::print(char *msg) { // null terminated string
     while (*msg) {
         if (!handle_ctrl_char(*msg)) { // if not control char
             char *bitmap;
-            if (*msg <= '`')
+            if (*msg <= '`') // uppercase ASCII -> subtract one space to get offset
                 bitmap = charmap[*msg - ' '];
-            else 
-                bitmap = charmap[*msg - ' ' - ' '];
-
-            D {
+            else                                    // convert lowercase to upercase by 
+                bitmap = charmap[*msg - ' ' - ' ']; // subtracting the offset twice 
+            D {                                     // (ascii math)
+                printf("\n");
                 for (int i = 0; i < BITMAP_SIZE; i++) {
                     printf("%#08x\n", bitmap[i]);
                 }
-                printf("\n");
             }
             // do the drawing
 
