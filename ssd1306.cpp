@@ -43,11 +43,12 @@ size_t SSD1306::print(char *msg) { // null terminated string
             msg++;
             continue;
         }
-        const char *bitmap = charmap[*msg - ' ']; // get bitmap
+        char *bitmap = charmap[*msg - ' ']; // get bitmap
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
             newline(); // if not, newline
         }
+        D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
         // use row and col to get buffer offset
         size_t offset = (this->cursor_row * DISPLAY_COLS) 
                         + (this->cursor_col * BITMAP_SIZE);

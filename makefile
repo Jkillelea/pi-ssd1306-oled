@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -std=c++11 -Wall
 CFLAGS += -O3
-# CFLAGS += -D DEBUG
+CFLAGS += -D DEBUG
 BUILD_DIR = ./build
 EXECS = clear test
 
