@@ -8,9 +8,9 @@ int main(int argc, char const *argv[]) {
     display.print((char *)msg);
     display.print((char *)msg);
     display.print((char *)msg);
-    // for (char ch = ' '; ch <= '`'; ch++) {
-    //     display.putc(ch);
-    // }
+    for (char ch = ' '; ch <= '`'; ch++) {
+        display.putc(ch);
+    }
 
     return 0;
 }
