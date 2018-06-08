@@ -86,7 +86,7 @@ size_t SSD1306::print(char *msg) { // null terminated string
 
             size_t offset = (this->cursor_row * DISPLAY_COLS) 
                             + (this->cursor_col * BITMAP_SIZE);
-            D printf("offset %lu", offset);
+            D printf("offset %d\n", offset);
 
             this->cursor_col++; // increment cursor
         }
