@@ -36,36 +36,6 @@ SSD1306::SSD1306(char *path, char addr) {
 size_t SSD1306::print(char *msg) { // null terminated string
     D printf("print(%s)\n", msg);
 
-    /*
-    *(this->cmd) = (1 << 6); // data only
-    char *data = msg;
-    while (*data) {
-        if(handle_ctrl_char(*data)) {
-            data++;
-            continue;
-        }
-        char *bitmap = charmap[*data - ' ']; // get bitmap
-
-        for (int i = 0; i < BITMAP_SIZE; i++) {
-            D printf("%#08x\n", bitmap[i]);
-        }
-
-        // see if there's enough space on this line for character
-        if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
-            newline(); // if not, newline
-        }
-        D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
-        // use row and col to get buffer offset
-        size_t offset = (this->cursor_row * DISPLAY_COLS) 
-                        + (this->cursor_col * BITMAP_SIZE);
-
-        memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
-
-        this->cursor_col++; // increment cursor
-        data++;             // increment ptr
-    }
-    */ 
-
     *this->cmd = (1 << 6);
     while (*msg) {
         if (!handle_ctrl_char(*msg)) { // if not control char
