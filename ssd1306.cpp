@@ -43,7 +43,7 @@ size_t SSD1306::print(char *msg) { // null terminated string
             data++;
             continue;
         }
-        char *bitmap = charmap[*data - ' ']; // get bitmap
+        const char *bitmap = charmap[*data - ' ']; // get bitmap
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
             newline(); // if not, newline
@@ -51,7 +51,9 @@ size_t SSD1306::print(char *msg) { // null terminated string
         // use row and col to get buffer offset
         size_t offset = (this->cursor_row * DISPLAY_COLS) 
                         + (this->cursor_col * BITMAP_SIZE);
+
         memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+
         this->cursor_col++; // increment cursor
         data++;             // increment ptr
     }
@@ -66,7 +68,7 @@ void SSD1306::newline() {
 
 size_t SSD1306::putc(char ch) {
     D puts("putc");
-    char *bitmap = charmap[ch - ' ']; // get bitmap
+    const char *bitmap = charmap[ch - ' ']; // get bitmap
     // see if there's enough space on this line for character
     if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
         newline(); // if not, newline
@@ -100,7 +102,7 @@ void SSD1306::testdraw() {
     size_t charsize = 6*sizeof(char); // bytes
     for(char c = ' '; c <= '`'; c++) {
         clear();
-        char *data = charmap[c - ' '];
+        const char *data = charmap[c - ' '];
         memcpy(this->display_buffer, data, charsize);
         send();
     }
