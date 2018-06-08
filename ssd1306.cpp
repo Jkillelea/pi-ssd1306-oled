@@ -27,7 +27,10 @@ SSD1306::SSD1306(char *path, char addr) {
 
     D printf("write(display_fd, init_seq, sizeof(init_seq)), "
              "sizeof(init_seq) = %lu\n", sizeof(init_seq));
-    write(this->display_fd, init_seq, sizeof(init_seq));
+    if (write(this->display_fd, init_seq, sizeof(init_seq)) != sizeof(init_seq)) {
+        perror("writing init sequence failed");
+        exit(EXIT_FAILURE);
+    }
 }
 
 size_t SSD1306::print(char *msg) { // null terminated string
@@ -108,10 +111,10 @@ void SSD1306::every_pixel() {
     D puts("testdraw");
     // *this->cmd = (1 << 6); // data only
     *this->cmd = 0x40;
-    for (int i = 0; i < DISPLAY_ROWS; i++) {
+    for (uint i = 0; i < DISPLAY_ROWS; i++) {
         D printf("row %d\n", i);
-        for (int j = 0; j < DISPLAY_COLS; j++) {
-            for (int k = 0; k < 8; k++) {
+        for (uint j = 0; j < DISPLAY_COLS; j++) {
+            for (uint k = 0; k < 8; k++) {
                 this->display_buffer[i*DISPLAY_COLS + j] |= (1 << k);
                 send();
             }

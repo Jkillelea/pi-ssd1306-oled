@@ -11,6 +11,7 @@
 #include <linux/i2c-dev.h> // I2C_SLAVE
 #include <string.h>        // memset(2)
 #include <stdint.h>
+#include <assert.h>
 
 #ifdef DEBUG
  #define D if(1) 
