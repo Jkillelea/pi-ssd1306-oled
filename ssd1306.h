@@ -1,68 +1,74 @@
-// Ken Hughes
-// July 2016
+#pragma once
 
+#include <stdio.h>         // perror, puts, ect
+#include <errno.h>
+#include <unistd.h>        // exit(2)
+#include <sys/types.h>     // open(2)
+#include <sys/stat.h>      // |
+#include <fcntl.h>         // | 
+#include <stdlib.h>        // EXIT_FAILURE
+#include <sys/ioctl.h>     // ioctl(2)
+#include <linux/i2c-dev.h> // I2C_SLAVE
+#include <string.h>        // memset(2)
+#include <stdint.h>
 
-#include <unistd.h>       // Needed for I2C port
-#include <fcntl.h>        // Needed for I2C port
-#include <sys/ioctl.h>    // Needed for I2C port
-#include <linux/i2c-dev.h>// Needed for I2C port
-#include <stdio.h>
-#include <string.h>
-
-#ifndef BOOL
-    #define BOOL
-    #define FALSE 0
-    #define TRUE -1
+#ifdef DEBUG
+ #define D if(1) 
+#else
+ #define D if(0) 
 #endif
 
+class SSD1306 {
+public:
+    enum class DisplayMode {
+        SCROLL,
+        WRAP
+    };
 
-#ifndef SSD1306_H_INCLUDED
-#define SSD1306_H_INCLUDED
+    SSD1306(char path[] = (char *)"/dev/i2c-1", char addr = 0x3C);
+    ~SSD1306();
 
-class SSD1306
-{
-    public:
-        enum Mode
-        {
-            SCROLL,
-            WRAP
-        };
+    void testdraw();
+    void every_pixel();
+#ifdef putc // putc is defined in stdio.h as a macro
+#undef putc
+#endif
+    void newline();
+    size_t putc(char ch);
+    size_t print(char *msg);
+    void clear();
 
-        SSD1306();
-        void clearDisplay();
-        void initDisplay();
-        void textDisplay(const char *message);
-        void setWordWrap(int);
-        void setDisplayMode(SSD1306::Mode);
+private:
+    uint32_t cursor_row = 0;
+    uint32_t cursor_col = 0;
 
-    private:
-        // line buffers (128 chars * 8 lines)
-    	unsigned char displayLines[8][128];
-    	int currentLine = 0;
-        int wordWrap = FALSE;
-        int displayMode = Mode::SCROLL;
-        int currentScrollLine = 0;
-        int needScroll = FALSE;
+    size_t send(); // write out the data
+    bool handle_ctrl_char(char ch); // write out the data
 
-        // i2c handles
-        int i2cHandle = -1;
-        int i2cInitialised = FALSE;
-    	int i2cAddress = 0x3C;
+    static const uint32_t DISPLAY_ROWS = 8;
+    static const uint32_t DISPLAY_COLS = 128;
+    int display_fd;
+    uint8_t i2c_addr;
+    // DisplayMode mode = DisplayMode::SCROLL;
+    /* send_buffer holds all the data
+     * cmd is a pointer to the first element
+     * display_buffer is a pointer to the second (and all the elements thereafter)
+     */
+    uint8_t send_buffer[DISPLAY_ROWS * DISPLAY_COLS + 1] = {0};
+    uint8_t *cmd = send_buffer;                // first byte is command
+    uint8_t *display_buffer = send_buffer + 1; // remaining is screen data
 
-        // ssd1306 command sequences
-        unsigned char initSequence[26] = {0x00,0xAE,0xA8,0x3F,0xD3,0x00,0x40,0xA1,0xC8,0xDA,0x12,0x81,0x7F,
-                                          0xA4,0xA6,0xD5,0x80,0x8D,0x14,0xD9,0x22,0xD8,0x30,0x20,0x00,0xAF};
+    // ssd1306 command sequences
+    uint8_t init_seq[26] = {0x00,0xAE,0xA8,0x3F,
+                            0xD3,0x00,0x40,0xA1,
+                            0xC8,0xDA,0x12,0x81,
+                            0x7F,0xA4,0xA6,0xD5,
+                            0x80,0x8D,0x14,0xD9,
+                            0x22,0xD8,0x30,0x20,
+                            0x00,0xAF};
 
-    	unsigned char setFullRange[7] = {0x00,0x21,0x00,0x7F,0x22,0x00,0x07};
+    uint8_t set_full_range_seq[7] = {0x00,0x21,0x00,0x7F,
+                                           0x22,0x00,0x07};
 
-        unsigned char scrollUpSequence[3] = {0x00,0xD3,0x08};
-
-        // helper functions
-        int addFontBytes(int curr, unsigned char c);
-        void setDisplayRange(int line);
-        void updateDisplayFull();
-        void writeI2C(unsigned char* data, int bytes); 
-        void scrollUp(int); 
+    uint8_t scroll_up_seq[3] = {0x00,0xD3,0x08};
 };
-
-#endif

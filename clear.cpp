@@ -1,4 +1,4 @@
-#include "tmp.h"
+#include "ssd1306.h"
 
 int main(int argc, char const *argv[]) {
     SSD1306 display = SSD1306();

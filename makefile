@@ -3,19 +3,15 @@ CFLAGS = -std=c++11
 CFLAGS += -O3
 CFLAGS += -D DEBUG
 BUILD_DIR = ./build
-EXECS = oled tmptest clear
+EXECS = clear test
 
 all: $(EXECS) | $(BUILD_DIR)
 
-oled: $(BUILD_DIR)/oled.o $(BUILD_DIR)/ssd1306.o
+test: $(BUILD_DIR)/test.o $(BUILD_DIR)/ssd1306.o
 	$(CC) $^ -o $@ $(CFLAGS)
 
-tmptest: $(BUILD_DIR)/tmptest.o $(BUILD_DIR)/tmp.o
+clear: $(BUILD_DIR)/clear.o $(BUILD_DIR)/ssd1306.o
 	$(CC) $^ -o $@ $(CFLAGS)
-
-clear: $(BUILD_DIR)/clear.o $(BUILD_DIR)/tmp.o
-	$(CC) $^ -o $@ $(CFLAGS)
-
 
 $(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
 	$(CC) -c $^ -o $@ $(CFLAGS)

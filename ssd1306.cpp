@@ -1,182 +1,156 @@
-#include <ctype.h>
-#include "charmap.h"
+// tmp.cpp - An interface for the SSD1306 display driver chip
 #include "ssd1306.h"
+#include "charmap.h"
 
-#ifdef DEBUG
- #define D if(1) 
-#else
- #define D if(0) 
-#endif
+/* Init object, open file, zero out data buffer */
+SSD1306::SSD1306(char *path, char addr) {
+    D puts("SSD1306::SSD1306");
+    this->i2c_addr = addr;
 
-    SSD1306::SSD1306() {
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 128; j++) {
-                displayLines[i][j] = 0;
+    D puts("open");
+    this->display_fd = open(path, O_WRONLY);
+    if (this->display_fd < 0) { // open file
+        perror("open(2)");
+        exit(EXIT_FAILURE);
+    }
+    D puts("open ok");
+
+    D puts("ioctl");    
+    if (ioctl(this->display_fd, I2C_SLAVE, this->i2c_addr) < 0) { // i2c device
+            perror("ioctl(2)");
+            exit(EXIT_FAILURE);
+    }
+    D puts("ioctl ok");    
+
+    D puts("memset display_buffer");
+    memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS * DISPLAY_COLS));    
+
+    D printf("write(display_fd, init_seq, sizeof(init_seq)), "
+             "sizeof(init_seq) = %lu\n", sizeof(init_seq));
+    write(this->display_fd, init_seq, sizeof(init_seq));
+}
+
+size_t SSD1306::print(char *msg) { // null terminated string
+    D puts("print");
+    D printf("%s\n", msg);
+    char *data = msg; // copy the ptr
+
+    while (*data) {
+        if(handle_ctrl_char(*data)) {
+            data++;
+            continue;
+        }
+        char *bitmap = charmap[*data - ' ']; // get bitmap
+        // see if there's enough space on this line for character
+        if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
+            newline(); // if not, newline
+        }
+        // use row and col to get buffer offset
+        size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                        + (this->cursor_col * BITMAP_SIZE);
+        memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+        this->cursor_col++; // increment cursor
+        data++;             // increment ptr
+    }
+    return send();
+}
+
+void SSD1306::newline() {
+    D puts("newline");
+    this->cursor_col = 0;
+    this->cursor_row++;
+}
+
+size_t SSD1306::putc(char ch) {
+    D puts("putc");
+    char *bitmap = charmap[ch - ' ']; // get bitmap
+    // see if there's enough space on this line for character
+    if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
+        newline(); // if not, newline
+    }
+    D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
+    // use row and col to get buffer offset
+    size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                    + (this->cursor_col * BITMAP_SIZE);
+
+    memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+    this->cursor_col++;
+
+    return send();
+}
+
+void SSD1306::clear() {
+    D puts("clear");
+    this->cursor_col = 0;
+    this->cursor_row = 0;
+
+    *(this->cmd) = (1 << 6); // data only
+    D puts("memset(this->display_buffer, 0, DISPLAY_ROWS * DISPLAY_COLS)");
+    memset(this->display_buffer, 0, DISPLAY_ROWS*DISPLAY_COLS); // zero out display buffer
+    send();
+}
+
+void SSD1306::testdraw() {
+    D puts("testdraw");
+    *this->cmd = (1 << 6); // data only
+
+    size_t charsize = 6*sizeof(char); // bytes
+    for(char c = ' '; c <= '`'; c++) {
+        clear();
+        char *data = charmap[c - ' '];
+        memcpy(this->display_buffer, data, charsize);
+        send();
+    }
+    
+}
+
+void SSD1306::every_pixel() {
+    D puts("testdraw");
+    // *this->cmd = (1 << 6); // data only
+    *this->cmd = 0x40;
+    for (int i = 0; i < DISPLAY_ROWS; i++) {
+        D printf("row %d\n", i);
+        for (int j = 0; j < DISPLAY_COLS; j++) {
+            for (int k = 0; k < 8; k++) {
+                this->display_buffer[i*DISPLAY_COLS + j] |= (1 << k);
+                send();
             }
         }
     }
+}
 
-    void SSD1306::initDisplay() {
-        D printf("initDisplay\n");
-		writeI2C(initSequence, 26);
-        i2cInitialised = TRUE;
+
+size_t SSD1306::send() {
+    D puts("write");
+    size_t nbytes_written;
+    if((nbytes_written = write(this->display_fd, 
+                               this->send_buffer, 
+                               sizeof(this->send_buffer))) < 0) {
+        perror("write(2) failed:");
+        exit(EXIT_FAILURE);
     }
+    return nbytes_written;
+}
 
-    void SSD1306::textDisplay(const char *message) {
-        if(!i2cInitialised)
-            initDisplay();
-
-        // and scroll up if needed (in SCROLL mode)
-        if((displayMode == SSD1306::Mode::SCROLL) && needScroll)
-            scrollUp(1);
-
-        D printf("textDisplay - %s\n", message);
-        int currByteCount = 0;
-        for(int i=0; i<strlen(message); i++) {
-            int bytesAdded = addFontBytes(currByteCount, message[i]);
-            if(bytesAdded > 0) {
-                currByteCount += bytesAdded;
-            } else {
-                if(wordWrap) {
-                    // fill the rest of this line with 0s
-                    while(currByteCount < 128) {
-                        displayLines[currentLine][currByteCount++] = 0x00;
-                    }
-                    // move it onto the next line
-                    currentLine++;
-                    // and scroll up if needed (in SCROLL mode)
-                    if((displayMode == SSD1306::Mode::SCROLL) && needScroll) {
-                        scrollUp(1);
-                    } 
-                    if (currentLine > 7) { 
-                        currentLine = 0;  
-                        needScroll = TRUE;                  
-                    }
-                    currByteCount=0;
-                    i--; // move back one so we try it again
-                }
-            }
-        }
-
-        // now fill up any left over with 0x00s on the current line
-        while(currByteCount < 128) {
-            displayLines[currentLine][currByteCount++] = 0x00;
-        }
-
-        // now point to next line and set to first char
-        currByteCount = 0;
-        currentLine++;
-        if(currentLine > 7) { 
-            currentLine = 0;
-            needScroll = TRUE;
-        }
-
-        updateDisplayFull();
+bool SSD1306::handle_ctrl_char(char ch) {
+    switch (ch) {
+        case '\n':
+            newline();
+            return true;
+        case '\t':
+            this->cursor_col += 2;
+            return true;
+        case '\r':
+            this->cursor_col = 0;
+            return true;
     }
+    return false;
+}
 
-    void SSD1306::clearDisplay() {
-        // blank out the line buffers
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 128; j++) {
-                displayLines[i][j] = 0;
-            }
-        }
-        //reset the scroll pointer and line pointer
-        currentScrollLine = 0;
-        currentLine = 0;
-        // write it out
-        updateDisplayFull();
+SSD1306::~SSD1306() {
+    D puts("SSD1306::~SSD1306");
+    if(this->display_fd > 0) {
+        D puts("close");
+        close(this->display_fd);
     }
-
-    void SSD1306::setWordWrap(int b) {
-        wordWrap = b;
-    }
-
-    void SSD1306::setDisplayMode(SSD1306::Mode mode) {
-        displayMode = mode;
-    }
-
-    // private functions
-    void SSD1306::scrollUp(int lines) {
-        if(!i2cInitialised)
-            initDisplay();
-
-        currentScrollLine += lines;
-
-        if (currentScrollLine > 7) 
-            currentScrollLine -= 8;
-
-        scrollUpSequence[2] = currentScrollLine * 8;
-        D printf("scrollUp\n");
-		writeI2C(scrollUpSequence, 3);
-    }
-
-    int SSD1306::addFontBytes(int curr, unsigned char c) {
-        D printf("addFontBytes - %i - ", c);
-        c = toupper(c); // we only support UPPERCASE letters
-        int letterIdx = (c - ' ');
-        if(letterIdx > 64)
-            letterIdx = 65;
-
-        int letterBytes = charmap[letterIdx][0];
-
-        if((curr + letterBytes + 1) > 127 ) {
-            return 0;
-            D printf("\n");
-        } else {
-            for(int i = 0; i < letterBytes; i++) {
-                D printf("%x ", charmap[letterIdx][1 + i]);
-                displayLines[currentLine][curr + i] = charmap[letterIdx][1 + i]; 
-            }
-
-            displayLines[currentLine][curr + letterBytes++] = 0x00;  // single byte space / seperator
-            D printf("\n");
-            return letterBytes;
-        }
-    }
-
-    void SSD1306::setDisplayRange(int line = -1) {
-        // -1 = full range
-        // 0..7 = line
-        D printf("setDisplayRange (7 bytes)\n");
-        if(line == -1) {
-            writeI2C(setFullRange, 7);
-        }
-    }
-
-    void SSD1306::updateDisplayFull() {
-        setDisplayRange(-1);
-        for(int line = 0; line < 8; line++) {
-            unsigned char buffer[129] = {0};
-            buffer[0] = 0x40;
-            for(int i=0; i<128; i++) {
-                buffer[1 + i] = displayLines[line][i];
-            }
-            writeI2C(buffer, 129);
-        }
-    }
-
-    void SSD1306::writeI2C(unsigned char* data, int bytes) {
-        char *deviceName = (char*)"/dev/i2c-1";
-	    if ((i2cHandle = open(deviceName, O_RDWR)) < 0) {
-            printf("error opening I2C\n");
-        } else {
-            D printf("Opened I2C bus (Handle = %i)\n", i2cHandle);
-            if (ioctl(i2cHandle, I2C_SLAVE, i2cAddress) < 0) {
-                printf("Error at ioctl\n");
-            } else {
-                D printf("writeI2C : ");
-                for(int i = 0; i < bytes; i++) {
-                    D printf("%x ", data[i]);
-                }
-                write(i2cHandle, data, bytes);
-                D printf("\n");
-            }
-            
-            // Close the i2c device bus
-            char *deviceName = (char*)"dev/i2c-1";
-            close(*deviceName);
-    	}
-
-    }
-
+}
