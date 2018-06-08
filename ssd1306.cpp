@@ -39,7 +39,12 @@ size_t SSD1306::print(char *msg) { // null terminated string
     *this->cmd = (1 << 6);
     while (*msg) {
         if (!handle_ctrl_char(*msg)) { // if not control char
-            char *bitmap = charmap[*msg - ' '];
+            char *bitmap;
+            if (*msg <= '`')
+                bitmap = charmap[*msg - ' '];
+            else 
+                bitmap = charmap[*msg - ' ' - ' '];
+
             D {
                 for (int i = 0; i < BITMAP_SIZE; i++) {
                     printf("%#08x\n", bitmap[i]);

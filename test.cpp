@@ -6,8 +6,8 @@ int main(int argc, char const *argv[]) {
 
     display.clear();
     display.print((char *)msg);
-    display.print((char *)msg);
-    display.print((char *)msg);
+    display.print((char *)"uppercase");
+    display.print((char *)"lowercase");
     for (char ch = ' '; ch <= '`'; ch++) {
         display.putc(ch);
     }
