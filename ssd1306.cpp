@@ -68,14 +68,27 @@ size_t SSD1306::print(char *msg) { // null terminated string
 
     *this->cmd = (1 << 6);
     while (*msg) {
-        if (!handle_ctrl_char(*msg)) {
+        if (!handle_ctrl_char(*msg)) { // if not control char
             char *bitmap = charmap[*msg - ' '];
             D {
                 for (int i = 0; i < BITMAP_SIZE; i++) {
                     printf("%#08x\n", bitmap[i]);
                 }
+                printf("\n");
             }
             // do the drawing
+
+            // see if there's enough space on this line for character
+            if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
+                newline(); // if not, newline
+            }
+            D printf("row %d, col %d\n", this->cursor_row, this->cursor_col);
+
+            size_t offset = (this->cursor_row * DISPLAY_COLS) 
+                            + (this->cursor_col * BITMAP_SIZE);
+            D printf("offset %lu", offset);
+
+            this->cursor_col++; // increment cursor
         }
         msg++;
     }
