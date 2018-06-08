@@ -43,14 +43,7 @@ size_t SSD1306::print(char *msg) { // null terminated string
             if (*msg <= '`') // uppercase ASCII -> subtract one space to get offset
                 bitmap = charmap[*msg - ' '];
             else                                    // convert lowercase to upercase by 
-                bitmap = charmap[*msg - ' ' - ' ']; // subtracting the offset twice 
-            D {                                     // (ascii math)
-                printf("\n");
-                for (int i = 0; i < BITMAP_SIZE; i++) {
-                    printf("%#08x\n", bitmap[i]);
-                }
-            }
-            // do the drawing
+                bitmap = charmap[*msg - ' ' - ' ']; // subtracting space twice (ascii math)
 
             // see if there's enough space on this line for character
             if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
@@ -60,11 +53,16 @@ size_t SSD1306::print(char *msg) { // null terminated string
 
             size_t offset = (this->cursor_row * DISPLAY_COLS) 
                             + (this->cursor_col * BITMAP_SIZE);
-            D printf("offset %d\n", offset);
 
             memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
-
             this->cursor_col++; // increment cursor
+
+            D {
+                printf("\n");
+                for (int i = 0; i < BITMAP_SIZE; i++) {
+                    printf("%#08x\n", bitmap[i]);
+                }
+            }
         }
         msg++;
     }
