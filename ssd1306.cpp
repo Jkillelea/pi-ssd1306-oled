@@ -39,10 +39,10 @@ size_t SSD1306::print(char *msg) { // null terminated string
     char *data = msg; // copy the ptr
 
     while (*data) {
-        if(handle_ctrl_char(*data)) {
-            data++;
-            continue;
-        }
+        // if(handle_ctrl_char(*data)) {
+        //     data++;
+        //     continue;
+        // }
         const char *bitmap = charmap[*data - ' ']; // get bitmap
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
