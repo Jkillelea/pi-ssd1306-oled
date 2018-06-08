@@ -36,7 +36,7 @@ SSD1306::SSD1306(char *path, char addr) {
 size_t SSD1306::print(char *msg) { // null terminated string
     D printf("print(%s)\n", msg);
 
-    *(this->cmd) = 0x00; // data only
+    *(this->cmd) = (1 << 6); // data only
     while (*msg) {
         if(handle_ctrl_char(*msg)) {
             msg++;
