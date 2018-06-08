@@ -36,13 +36,15 @@ SSD1306::SSD1306(char *path, char addr) {
 size_t SSD1306::print(char *msg) { // null terminated string
     D printf("print(%s)\n", msg);
 
+    /*
     *(this->cmd) = (1 << 6); // data only
-    while (*msg) {
-        if(handle_ctrl_char(*msg)) {
-            msg++;
+    char *data = msg;
+    while (*data) {
+        if(handle_ctrl_char(*data)) {
+            data++;
             continue;
         }
-        char *bitmap = charmap[*msg - ' ']; // get bitmap
+        char *bitmap = charmap[*data - ' ']; // get bitmap
 
         for (int i = 0; i < BITMAP_SIZE; i++) {
             D printf("%#08x\n", bitmap[i]);
@@ -60,8 +62,24 @@ size_t SSD1306::print(char *msg) { // null terminated string
         memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
 
         this->cursor_col++; // increment cursor
-        msg++;             // increment ptr
+        data++;             // increment ptr
     }
+    */ 
+
+    *this->cmd = (1 << 6);
+    while (*msg) {
+        if (!handle_ctrl_char(*msg)) {
+            char *bitmap = charmap[*msg - ' '];
+            D {
+                for (int i = 0; i < BITMAP_SIZE; i++) {
+                    printf("%#08x\n", bitmap[i]);
+                }
+            }
+            // do the drawing
+        }
+        msg++;
+    }
+
     return send();
 }
 
