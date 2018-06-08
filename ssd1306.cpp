@@ -43,6 +43,11 @@ size_t SSD1306::print(char *msg) { // null terminated string
             continue;
         }
         char *bitmap = charmap[*msg - ' ']; // get bitmap
+
+        for (int i = 0; i < BITMAP_SIZE; i++) {
+            D printf("%#08x\n", bitmap[i]);
+        }
+
         // see if there's enough space on this line for character
         if ((DISPLAY_COLS - BITMAP_SIZE*this->cursor_col) < BITMAP_SIZE) {
             newline(); // if not, newline

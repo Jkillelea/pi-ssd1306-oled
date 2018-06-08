@@ -1,5 +1,5 @@
 #define BITMAP_SIZE 6
-char charmap[][6] = {
+char charmap[][BITMAP_SIZE] = {
 	{0x00,0x00}, // SPACE
 	{0x5E}, // !
 	{0x02,0x00,0x02}, // "
