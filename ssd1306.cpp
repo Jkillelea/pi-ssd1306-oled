@@ -88,6 +88,8 @@ size_t SSD1306::print(char *msg) { // null terminated string
                             + (this->cursor_col * BITMAP_SIZE);
             D printf("offset %d\n", offset);
 
+            memcpy(&this->display_buffer[offset], bitmap, BITMAP_SIZE);
+
             this->cursor_col++; // increment cursor
         }
         msg++;
