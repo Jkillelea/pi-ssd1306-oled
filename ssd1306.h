@@ -37,6 +37,7 @@ public:
     void newline();
     size_t putc(char ch);
     size_t print(char *msg);
+    size_t println(char *msg);
     void clear();
 
 private:

@@ -70,6 +70,12 @@ size_t SSD1306::print(char *msg) { // null terminated string
     return send();
 }
 
+size_t SSD1306::println(char *msg) {
+    size_t nbytes = print(msg);
+    newline();
+    return nbytes+1;
+}
+
 void SSD1306::newline() {
     D puts("newline");
     this->cursor_col = 0;
