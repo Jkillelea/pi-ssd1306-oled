@@ -26,7 +26,7 @@ SSD1306::SSD1306(char *path, char addr) {
     memset(this->display_buffer, 0, (size_t)(DISPLAY_ROWS * DISPLAY_COLS));    
 
     D printf("write(display_fd, init_seq, sizeof(init_seq)), "
-             "sizeof(init_seq) = %lu\n", sizeof(init_seq));
+             "sizeof(init_seq) = %zu\n", sizeof(init_seq));
     if (write(this->display_fd, init_seq, sizeof(init_seq)) != sizeof(init_seq)) {
         perror("writing init sequence failed");
         exit(EXIT_FAILURE);
